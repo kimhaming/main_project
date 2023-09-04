@@ -9,7 +9,30 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
-    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
   sql:
     init:
-      mode: always
+      data-locations: classpath*:db/h2/data.sql
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            # 구글에서 발급받은 clientId 와 clientSecret 이 노출되지 않도록 환경변수 설정 (I정 > Environment variables 에 설 -> 전용 properties 파일로 옮겨서 외부로 뺄 예정입니다.
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
+jwt:
+  key:
+    secret: ${GOOGLE_CLIENT_SECRET}
+  access-token-expiration-minutes: 15
+  refresh-token-expiration-minutes: 1440
+
+server:
+  port: 8081
+
