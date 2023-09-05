@@ -33,7 +33,7 @@ public class SecurityConfiguration {
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http    //  시큐리티 설정 커스터마이징 수정 필요
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .csrf().disable()
