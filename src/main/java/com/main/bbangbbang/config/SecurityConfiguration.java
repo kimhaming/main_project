@@ -97,4 +97,18 @@ public class SecurityConfiguration {
 
         return source;
     }
+
+    private OAuth2UserService<OAuth2UserRequest, OAuth2User> userInfoService() {
+        DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
+        return (userRequest) -> {
+            OAuth2User user = delegate.loadUser(userRequest);
+            System.out.println("OAuth2User: " + user);  //  디버깅 확인
+
+            // user token is valid => jwt token generate
+
+            // token is new -> save to db
+
+            return user;
+        };
+    }
 }
