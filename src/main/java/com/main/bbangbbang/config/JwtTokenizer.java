@@ -49,7 +49,7 @@ public class JwtTokenizer {
                 .compact();
     }
 
-    public String generateRefreshTok공en(String subject, Date expiration, String base64EncodedSecretKey) {
+    public String generateRefreshToken(String subject, Date expiration, String base64EncodedSecretKey) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
 
         return Jwts.builder()
