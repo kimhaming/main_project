@@ -1,10 +1,11 @@
 package com.main.bbangbbang.config;
 
+import com.main.bbangbbang.auth.handler.OAuth2LoginSuccessHandler;
+import com.main.bbangbbang.jwt.JwtTokenizer;
 import com.main.bbangbbang.utils.CustomAuthorityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

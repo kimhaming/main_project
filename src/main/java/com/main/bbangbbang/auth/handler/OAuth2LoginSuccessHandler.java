@@ -1,5 +1,6 @@
-package com.main.bbangbbang.config;
+package com.main.bbangbbang.auth.handler;
 
+import com.main.bbangbbang.jwt.JwtTokenizer;
 import com.main.bbangbbang.utils.CustomAuthorityUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;

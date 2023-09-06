@@ -1,4 +1,4 @@
-package com.main.bbangbbang.config;
+package com.main.bbangbbang.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
