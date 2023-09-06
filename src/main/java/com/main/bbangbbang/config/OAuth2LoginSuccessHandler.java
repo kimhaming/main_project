@@ -101,11 +101,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                     .newInstance()
                     .scheme("http")
                     .host("localhost")
-//                .port(80)
+//                .port(80) // 추후 포트번호 변경 시 작성
                     .path("/receive-token.html")
                     .queryParams(queryParams)
                     .build()
                     .toUri();
         }
-
     }
