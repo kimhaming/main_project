@@ -1,7 +1,7 @@
 package com.main.bbangbbang.auth.handler;
 
-import com.main.bbangbbang.jwt.JwtTokenizer;
-import com.main.bbangbbang.utils.CustomAuthorityUtils;
+import com.main.bbangbbang.auth.jwt.JwtTokenizer;
+import com.main.bbangbbang.auth.utils.CustomAuthorityUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -61,10 +61,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             String refreshToken = delegateRefreshToken(username);     // (6-2)
             System.out.println("Refresh Token : " + refreshToken);
 
-            String uri = createURI(accessToken, refreshToken).toString();   // (6-3)
+            response.setHeader("Authrization", "Bearer " + accessToken);
+            response.setHeader("Refresh", refreshToken);
+            String uri = "http://bbangorder.s3-website.ap-northeast-2.amazonaws.com";
+
+//            String uri = createURI(accessToken, refreshToken).toString();   // (6-3)
             System.out.println("redirect to URI : " + uri);
 
-            getRedirectStrategy().sendRedirect(request, response, uri);   // (6-4)
+            getRedirectStrategy().sendRedirect(request, response, uri);   // (6-4) 고정주소 + uri 함께 주는 내장 메서드
 
         }
 
@@ -76,7 +80,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             String subject = username;
             Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
 
-            String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey();
+            String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
             String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
 
@@ -86,7 +90,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         private String delegateRefreshToken(String username) {
             String subject = username;
             Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
-            String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey();
+            String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
             String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 

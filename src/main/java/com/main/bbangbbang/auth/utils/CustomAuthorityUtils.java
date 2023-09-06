@@ -1,4 +1,4 @@
-package com.main.bbangbbang.utils;
+package com.main.bbangbbang.auth.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
