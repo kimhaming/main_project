@@ -3,10 +3,10 @@ package com.main.bbangbbang.aop;
 import com.main.bbangbbang.exception.BusinessLogicException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionAdvice {
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<?> handleBusinessLogicException(BusinessLogicException e) {
