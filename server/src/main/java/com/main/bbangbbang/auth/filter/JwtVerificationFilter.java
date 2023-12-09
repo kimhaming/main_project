@@ -1,5 +1,6 @@
 package com.main.bbangbbang.auth.filter;
 
+import com.main.bbangbbang.auth.controller.AuthController;
 import com.main.bbangbbang.auth.jwt.JwtTokenizer;
 import com.main.bbangbbang.auth.utils.CustomAuthorityUtils;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -32,6 +33,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {  // (1)   JWT 
         this.authorityUtils = authorityUtils;
     }
 
+    // 실제로 필터링을 수행하는 메서드, JWT를 검증하고 인증 정보를 SecurityContextHolder에 저장. 예외가 발생하면 적절한 응답 코드를 설정
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -47,13 +49,14 @@ public class JwtVerificationFilter extends OncePerRequestFilter {  // (1)   JWT 
             request.setAttribute("exception", se);
         } catch (ExpiredJwtException ee) {
             request.setAttribute("exception", ee);
-        } catch (Exception e) {
+        } catch (Exception e) { //  최고조상 -> 마지막 catch문에
             request.setAttribute("exception", e);
         }
 
         filterChain.doFilter(request, response);
     }
 
+    // 필터를 적용할지 여부를 결정하는 메서드. Authorization 헤더가 없거나 Bearer로 시작하지 않으면 필터를 적용하지 않음
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String authorization = request.getHeader("Authorization");
@@ -61,19 +64,23 @@ public class JwtVerificationFilter extends OncePerRequestFilter {  // (1)   JWT 
         return authorization == null || !authorization.startsWith("Bearer");
     }
 
+    // JWT를 검증하고 해당하는 클레임을 추출하는 메서드. 만료된 토큰 또는 블랙리스트에 있는 토큰인 경우 예외를 던짐
+    // 현재 블랙리스트 수정중이라서 getTokenBlackList 사용못함
     private Map<String, Object> verifyJws(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String jws = request.getHeader("Authorization").replace("Bearer ", "");
 
-        if (jwtTokenizer.getTokenBlackList().containsKey(jws)){
+        if (jwtTokenizer.isTokenBlacklisted(jws)) {
 //            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Blacklisted JWT Token");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
+
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
 
         return claims;
     }
 
+    // 추출한 클레임을 기반으로 Spring Security의 Authentication 객체를 만들어 SecurityContextHolder에 저장하는 메서드
     private void setAuthenticationToContext(Map<String, Object> claims) {
         String username = (String) claims.get("username");
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));

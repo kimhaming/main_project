@@ -45,7 +45,7 @@ public class TokenController {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         List<String> authorities = authorityUtils.createRoles(email);
 
-        if(optionalMember.isPresent()){
+        if(optionalMember.isPresent()) {
             Member member = optionalMember.get();
             String username = member.getNickname();
             String accessToken = tokenService.delegateAccessToken(username, authorities);

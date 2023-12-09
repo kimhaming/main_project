@@ -32,29 +32,30 @@ public class MemberController {
     private JwtTokenizer jwtTokenizer;
     private S3Service s3Service;
 
-    @PostMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request) {
-        // "Bearer " 이후의 토큰 문자열 추출
-        // .substring -> .split(" ") -> .replace("Bearer ", "") 로 대체 가능
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body("Authorization header is not valid");
-        }
-
-        String[] parts = authorizationHeader.split(" ");
-        String jws;
-
-        if (parts.length > 1) {
-            jws = parts[1];
-        } else {
-            return ResponseEntity.badRequest().body("Invalid Authorization header format.");
-        }
-
-        jwtTokenizer.addToTokenBlacklist(jws);     //블랙리스트에 jws 추가, 접근 막음
-
-        return ResponseEntity.ok().body("Successfully logged out");
-    }
+    // 로그아웃 기능 AuthController 로 이동
+//    @PostMapping("/logout")
+//    public ResponseEntity logout(HttpServletRequest request) {
+//        // "Bearer " 이후의 토큰 문자열 추출
+//        // .substring -> .split(" ") -> .replace("Bearer ", "") 로 대체 가능
+//        String authorizationHeader = request.getHeader("Authorization");
+//
+//        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+//            return ResponseEntity.badRequest().body("Authorization header is not valid");
+//        }
+//
+//        String[] parts = authorizationHeader.split(" ");
+//        String jws;
+//
+//        if (parts.length > 1) {
+//            jws = parts[1];
+//        } else {
+//            return ResponseEntity.badRequest().body("Invalid Authorization header format.");
+//        }
+//
+//        jwtTokenizer.addToTokenBlacklist(jws);     //블랙리스트에 jws 추가, 접근 막음
+//
+//        return ResponseEntity.ok().body("Successfully logged out");
+//    }
 
     // 회원 정보 수정
     @PatchMapping

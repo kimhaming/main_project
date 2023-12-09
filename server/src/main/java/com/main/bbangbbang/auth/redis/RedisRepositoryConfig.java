@@ -18,7 +18,8 @@ public class RedisRepositoryConfig {
 
     // RedisConnectionFactory를 빈으로 등록
     // RedisConnectionFactory는 Redis 서버에 연결하는 인터페이스
-    // LettuceConnectionFactory는 RedisConnectionFactory의 구현체 중 하나
+    //
+    //   RedisConnectionFactory의 구현체 중 하나
     // RedisProperties로 yml에 저장한 host, post를 가지고 와서 연결한다.
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
