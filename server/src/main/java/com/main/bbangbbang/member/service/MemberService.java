@@ -6,6 +6,7 @@ import com.main.bbangbbang.member.entity.Member;
 import com.main.bbangbbang.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class MemberService {
     private MemberRepository memberRepository;
 
+    @Transactional
     public Member createMember(String email, String nickname, String img) {
         // 중복 여부 확인
         Optional<Member> existingMember = memberRepository.findByEmail(email);
@@ -29,20 +31,19 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional(readOnly = true)
     public Member findMember(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member findMember =
-                optionalMember.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.NOT_MEMBER));
-        return findMember;
-//        return memberRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.NOT_MEMBER));
     }
 
+    @Transactional(readOnly = true)
     public Member findMemberById(long id) {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-        return optionalMember.orElseThrow(NoSuchElementException::new);
+        return memberRepository.findById(id)
+                .orElseThrow(NoSuchElementException::new);
     }
 
+    @Transactional
     public Member updateMember(Member member) {
         Optional<Member> optionalMember = memberRepository.findById(member.getId());
         Member findMember = optionalMember.orElseThrow(() -> new NoSuchElementException("Member not found"));
@@ -50,6 +51,7 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
+    @Transactional
     public Member deleteMember(long MemberId) {
         Optional<Member> optionalMember = memberRepository.findById(MemberId);
         Member member = optionalMember.orElseThrow(() -> new NoSuchElementException("Member not found"));
